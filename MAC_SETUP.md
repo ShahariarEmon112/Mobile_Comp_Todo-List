@@ -65,30 +65,27 @@ xcodegen --version
 
 ## 4. Clone the repository
 
-The repository is **private**, so sign in to GitHub first. The easiest way is the GitHub CLI:
-```bash
-brew install gh
-```
-```bash
-gh auth login
-```
-(Choose GitHub.com → HTTPS → Login with a web browser.) Then:
 ```bash
 cd ~/Desktop
-gh repo clone ShahariarEmon112/Firebase-Todo-App
-cd Firebase-Todo-App
+git clone https://github.com/ShahariarEmon112/Mobile_Comp_Todo-List.git
+cd Mobile_Comp_Todo-List
 ```
-*Without `gh`:* `git clone https://github.com/ShahariarEmon112/Firebase-Todo-App.git`. When asked for a password, use a GitHub **personal access token**, not your account password.
 
-## 5. Add GoogleService-Info.plist (required)
+## 5. GoogleService-Info.plist (already included)
 
-The Firebase config file is **not in the repository** for security reasons. Get it like this:
+The Firebase config file is **already in the repository** at `FirebaseTodoApp/Resources/GoogleService-Info.plist`, so you can skip to step 6. Check it with:
+```bash
+/usr/libexec/PlistBuddy -c "Print :BUNDLE_ID" FirebaseTodoApp/Resources/GoogleService-Info.plist
+```
+It must print `com.saikat.firebasetodo`.
+
+Only if the file is missing or you want a fresh copy:
 
 1. On the Mac, open <https://console.firebase.google.com> and sign in with the Google account that owns the project.
 2. Open project **fir-todo-app-489dc** → gear icon → **Project settings**.
 3. Scroll to **Your apps** → select the iOS app **com.saikat.firebasetodo**.
 4. Click **GoogleService-Info.plist** to download it.
-5. Move it into the project (run from inside `Firebase-Todo-App`):
+5. Move it into the project (run from inside `Mobile_Comp_Todo-List`):
    ```bash
    cp ~/Downloads/GoogleService-Info.plist FirebaseTodoApp/Resources/GoogleService-Info.plist
    ```
@@ -102,8 +99,6 @@ The Firebase config file is **not in the repository** for security reasons. Get 
    ```
    The second command must print `com.saikat.firebasetodo`.
 
-> Alternative: copy the file from your own computer with a USB drive, AirDrop or email. It is the same file as `~/Downloads/GoogleService-Info.plist` on your Ubuntu machine.
-> **Don't commit it** (`.gitignore` already blocks it), and delete it from the lab Mac when you're done (step 10).
 
 ## 6. Generate the Xcode project
 
@@ -160,23 +155,15 @@ Do these once per Firebase project, from any computer:
 
 ## 10. Clean up the lab Mac afterwards
 
-```bash
-rm FirebaseTodoApp/Resources/GoogleService-Info.plist
-```
-```bash
-gh auth logout
-```
-You can also delete the cloned folder.
+Delete the cloned folder if you no longer need it.
 
 ---
 
 ## Quick reference (all commands in order)
 
 ```bash
-brew install xcodegen gh
-gh auth login
-cd ~/Desktop && gh repo clone ShahariarEmon112/Firebase-Todo-App && cd Firebase-Todo-App
-cp ~/Downloads/GoogleService-Info.plist FirebaseTodoApp/Resources/GoogleService-Info.plist
+brew install xcodegen
+cd ~/Desktop && git clone https://github.com/ShahariarEmon112/Mobile_Comp_Todo-List.git && cd Mobile_Comp_Todo-List
 xcodegen generate
 xcodebuild -resolvePackageDependencies -project FirebaseTodoApp.xcodeproj -scheme FirebaseTodoApp
 open FirebaseTodoApp.xcodeproj

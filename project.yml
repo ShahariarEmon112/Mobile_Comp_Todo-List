@@ -29,8 +29,8 @@ targets:
       - path: FirebaseTodoApp
         excludes:
           - "Resources/GoogleService-Info.plist"
-      # Firebase config is required but never committed. Listed explicitly so
-      # the file is bundled as soon as it is copied in (see MAC_SETUP.md).
+      # Firebase config (required). Listed explicitly so it is always bundled;
+      # the pre-build check below fails clearly if it is ever missing.
       - path: FirebaseTodoApp/Resources/GoogleService-Info.plist
         optional: true
         buildPhase: resources

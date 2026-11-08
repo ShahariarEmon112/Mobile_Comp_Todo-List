@@ -1,7 +1,10 @@
 # ---- Firebase secrets / local config -------------------------------------
-# The real Firebase config is downloaded from the Firebase Console per machine.
+# Stray downloaded copies (e.g. "GoogleService-Info (1).plist") are ignored.
 GoogleService-Info.plist
 **/GoogleService-Info*.plist
+# The app's Firebase client config IS committed so the project builds after cloning.
+# It identifies the Firebase project; access is protected by Auth + firestore.rules.
+!FirebaseTodoApp/Resources/GoogleService-Info.plist
 # Service account keys must never be committed.
 *-firebase-adminsdk-*.json
 serviceAccount*.json

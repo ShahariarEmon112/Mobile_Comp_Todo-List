@@ -25,7 +25,8 @@ Each user signs up with email and password, and their tasks sync in real time an
 13. [Automated tests](#automated-tests)
 14. [Troubleshooting](#troubleshooting)
 
-For exact step-by-step commands on a borrowed or lab Mac, see **[MAC_SETUP.md](MAC_SETUP.md)**.
+**Just want to run it?** See **[run_command.md](run_command.md)**: clone, `xcodegen generate`, open in Xcode, ⌘R. No Firebase setup needed.
+For a full step-by-step Mac guide, see **[MAC_SETUP.md](MAC_SETUP.md)**.
 
 ---
 
@@ -105,12 +106,13 @@ No other third-party libraries are used.
 ## Project structure
 
 ```
-Firebase-Todo-App/
+Mobile_Comp_Todo-List/
 ├── project.yml                     # XcodeGen spec (generates FirebaseTodoApp.xcodeproj)
 ├── firebase.json / .firebaserc     # Firebase CLI config (rules deploy + emulator)
 ├── README.md
 ├── MAC_SETUP.md                    # Step-by-step guide for a Mac
-├── .gitignore                      # Keeps GoogleService-Info.plist and secrets out of git
+├── run_command.md                  # Quick run commands
+├── .gitignore                      # Keeps secrets and stray config copies out of git
 ├── FirebaseTodoApp/
 │   ├── App/
 │   │   ├── FirebaseTodoApp.swift   # @main entry; configures Firebase
@@ -143,7 +145,7 @@ Firebase-Todo-App/
 │   │   └── View+Alerts.swift
 │   └── Resources/
 │       ├── Assets.xcassets         # AppIcon, AccentColor, status colors (light + dark)
-│       └── GoogleService-Info.plist   ← you add this (not in git)
+│       └── GoogleService-Info.plist   # Firebase client config (included)
 ├── FirebaseTodoAppTests/           # XCTest unit tests + test-only mocks
 ├── Firestore/
 │   ├── firestore.rules             # Security rules
@@ -226,12 +228,14 @@ npm test
 
 ## GoogleService-Info.plist
 
-This file connects the app to your Firebase project. **It is not committed to git** (it is listed in `.gitignore`), so every machine needs its own copy.
+This file connects the app to the Firebase project `fir-todo-app-489dc`. **It is included in the repository** at `FirebaseTodoApp/Resources/GoogleService-Info.plist`, so the app builds and runs right after cloning, with no Firebase setup.
 
-1. Firebase Console → **Project settings** → **Your apps** → select the iOS app `com.saikat.firebasetodo`.
-2. Click **GoogleService-Info.plist** to download it.
-3. Copy it to: **`FirebaseTodoApp/Resources/GoogleService-Info.plist`** (exact name: if your browser saved it as `GoogleService-Info (1).plist`, rename it).
-4. Run `xcodegen generate` (again).
+It contains client identifiers (project ID, app ID, API key), not passwords. Firebase is designed for these to ship inside the app. Data is protected by Firebase Authentication and the Firestore security rules, which only let each signed-in user access their own tasks.
+
+To point the app at a **different** Firebase project instead:
+1. Firebase Console → **Project settings** → **Your apps** → add an iOS app with bundle ID `com.saikat.firebasetodo`.
+2. Download its **GoogleService-Info.plist** and replace the file above (keep that exact name).
+3. Enable Email/Password sign-in, create Firestore, publish `Firestore/firestore.rules`, then run `xcodegen generate`.
 
 `project.yml` lists the file as a bundled resource, and a build step **stops the build with a clear error** if it is missing. If the app somehow runs without it, it shows a "Firebase isn't configured" screen instead of crashing.
 
@@ -251,7 +255,7 @@ This file connects the app to your Firebase project. **It is not committed to gi
 
 The `.xcodeproj` is **generated** from `project.yml` and is not stored in git.
 ```bash
-cd Firebase-Todo-App
+cd Mobile_Comp_Todo-List
 xcodegen generate
 open FirebaseTodoApp.xcodeproj
 ```
