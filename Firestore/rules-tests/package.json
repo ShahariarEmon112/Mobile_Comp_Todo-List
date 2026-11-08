@@ -1,0 +1,14 @@
+{
+  "name": "firebase-todo-rules-tests",
+  "private": true,
+  "description": "Security rules tests for Firestore/firestore.rules, run against the Firebase emulator.",
+  "type": "module",
+  "scripts": {
+    "test": "firebase emulators:exec --config ../../firebase.json --only firestore --project demo-todo-rules \"node --test rules.test.js\""
+  },
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "^6.0.0",
+    "firebase": "^13.0.0",
+    "firebase-tools": "^15.0.0"
+  }
+}
