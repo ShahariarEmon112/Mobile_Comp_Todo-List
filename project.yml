@@ -1,0 +1,97 @@
+# XcodeGen spec. On a Mac run `xcodegen generate` in this folder to create
+# FirebaseTodoApp.xcodeproj (the .xcodeproj itself is not committed).
+name: FirebaseTodoApp
+
+options:
+  bundleIdPrefix: com.saikat
+  deploymentTarget:
+    iOS: "17.0"
+  xcodeVersion: "16.0"
+  createIntermediateGroups: true
+
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    MARKETING_VERSION: "1.0.0"
+    CURRENT_PROJECT_VERSION: "1"
+    DEVELOPMENT_TEAM: ""
+
+packages:
+  Firebase:
+    url: https://github.com/firebase/firebase-ios-sdk
+    from: "12.0.0"
+
+targets:
+  FirebaseTodoApp:
+    type: application
+    platform: iOS
+    sources:
+      - path: FirebaseTodoApp
+        excludes:
+          - "Resources/GoogleService-Info.plist"
+      # Firebase config is required but never committed. Listed explicitly so
+      # the file is bundled as soon as it is copied in (see MAC_SETUP.md).
+      - path: FirebaseTodoApp/Resources/GoogleService-Info.plist
+        optional: true
+        buildPhase: resources
+    dependencies:
+      - package: Firebase
+        product: FirebaseCore
+      - package: Firebase
+        product: FirebaseAuth
+      - package: Firebase
+        product: FirebaseFirestore
+    preBuildScripts:
+      - name: Verify GoogleService-Info.plist
+        basedOnDependencyAnalysis: false
+        script: |
+          PLIST="${SRCROOT}/FirebaseTodoApp/Resources/GoogleService-Info.plist"
+          if [ ! -f "$PLIST" ]; then
+            echo "error: GoogleService-Info.plist is missing. Download it from Firebase Console (Project settings > Your apps > iOS app com.saikat.firebasetodo) and copy it to FirebaseTodoApp/Resources/. See MAC_SETUP.md."
+            exit 1
+          fi
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.saikat.firebasetodo
+        PRODUCT_NAME: FirebaseTodoApp
+        TARGETED_DEVICE_FAMILY: "1,2"
+        CODE_SIGN_STYLE: Automatic
+        ENABLE_PREVIEWS: YES
+        ENABLE_USER_SCRIPT_SANDBOXING: NO
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Todo
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
+        INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
+
+  FirebaseTodoAppTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: FirebaseTodoAppTests
+    dependencies:
+      - target: FirebaseTodoApp
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.saikat.firebasetodo.tests
+        GENERATE_INFOPLIST_FILE: YES
+
+schemes:
+  FirebaseTodoApp:
+    build:
+      targets:
+        FirebaseTodoApp: all
+        FirebaseTodoAppTests: [test]
+    run:
+      config: Debug
+    test:
+      config: Debug
+      gatherCoverageData: true
+      targets:
+        - FirebaseTodoAppTests
+    archive:
+      config: Release

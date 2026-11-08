@@ -1,0 +1,45 @@
+# ---- Firebase secrets / local config -------------------------------------
+# The real Firebase config is downloaded from the Firebase Console per machine.
+GoogleService-Info.plist
+**/GoogleService-Info*.plist
+# Service account keys must never be committed.
+*-firebase-adminsdk-*.json
+serviceAccount*.json
+service-account*.json
+*.p8
+*.p12
+*.mobileprovision
+.env
+.env.*
+
+# ---- Xcode / XcodeGen ------------------------------------------------------
+# The .xcodeproj is generated from project.yml by XcodeGen.
+*.xcodeproj
+*.xcworkspace
+xcuserdata/
+DerivedData/
+build/
+*.xcresult
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# ---- Swift Package Manager -------------------------------------------------
+.build/
+.swiftpm/
+Packages/
+
+# ---- Node / Firebase emulator (rules tests) --------------------------------
+node_modules/
+firebase-debug.log*
+firestore-debug.log*
+ui-debug.log*
+.firebase/
+*.log
+
+# ---- OS / editors ----------------------------------------------------------
+.DS_Store
+.idea/
+.vscode/
+*.swp
